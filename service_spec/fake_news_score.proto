@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+message InputFNS {
+    string headline = 1;
+    string body = 2;
+}
+
+message Score {
+    string stance = 1;
+    double agree = 2;
+    double disagree = 3; 
+    double discuss = 4;
+    double unrelated = 5;
+}
+
+service FakeNewsScore {
+    rpc fn_score_calc(InputFNS) returns (Score) {}
+}
+
+

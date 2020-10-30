@@ -1,1 +1,21 @@
-This is the repository of NuNet team for the participation at Odyssey Hackathon 2020. It will be made public before the start of the hackathon and possibly earlier and licensed with AGPL 3 or GPL 3 or creative commons 3.0 non-commercial share alike.
+# Fake News Score Service
+
+## Requirements
+
+Start both uclnlp (https://github.com/dagims/fakenewschallenge/tree/snet-service) and fnc (https://gitlab.com/nunet/odyssey-hackathon-2020-dev/-/tree/eskender_cpu) services (use the Dockerfile here)
+
+Generate proto files
+
+	./install.sh
+
+
+## Install
+
+Start grpc service
+
+		python3.5 fake_news_score.py
+
+Test grpc client
+
+		python3.5 fns_grpc_client_test.py
+
