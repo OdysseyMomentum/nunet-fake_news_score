@@ -40,8 +40,24 @@ def get_uclnlp(headline, body):
     in_d = uclnlpfnc_pb2.InputData()
     in_d.headline = headline
     in_d.body = body	
-    res = stub_ucl.stance_classify(in_d)
-    return res
+    try:
+        res = stub_ucl.stance_classify(in_d)
+        return res
+    except grpc.RpcError as e:
+        status_code = e.code()
+        if grpc.StatusCode.INVALID_ARGUMENT == status_code:
+            status_code = "Invalid arguments for UCLMR FNS service call"
+        elif grpc.StatusCode.PERMISSION_DENIED == status_code:
+            status_code = "Permission denied to UCLMR FNS service call"
+        elif grpc.StatusCode.RESOURCE_EXHAUSTED == status_code:
+            status_code = "Call to UCLMR FNS service denied because of resource exhaustion"
+        elif grpc.StatusCode.CANCELLED == status_code:
+            status_code = "Call to UCLMR FNS cancelled by the user"
+        elif grpc.StatusCode.UNIMPLEMENTED == status_code:
+            status_code = "Method is not implemented or is not supported/enabled in this service."
+        else:
+            status_code = "UCLMR FNS service server is unreachable"
+        return status_code
 
 def get_fnc(headline, body):
     channel_fnc = grpc.insecure_channel(FNC_GRPC_PORT)	
@@ -49,10 +65,24 @@ def get_fnc(headline, body):
     example = fnc_stance_detection_pb2.Input()
     example.headline = headline
     example.body = body
-    print(example.headline)
-    res = stub_fnc.stance_detection(example)
-    print(res)
-    return res
+    try:
+        res = stub_fnc.stance_detection(example)
+        return res
+    except grpc.RpcError as e:
+        status_code = e.code()
+        if grpc.StatusCode.INVALID_ARGUMENT == status_code:
+            status_code = "Invalid arguments for SOLAT FNS service call"
+        elif grpc.StatusCode.PERMISSION_DENIED == status_code:
+            status_code = "Permission denied to SOLAT FNS service call"
+        elif grpc.StatusCode.RESOURCE_EXHAUSTED == status_code:
+            status_code = "Call to SOLAT FNS service denied because of resource exhaustion"
+        elif grpc.StatusCode.CANCELLED == status_code:
+            status_code = "Call to SOLAT FNS cancelled by the user"
+        elif grpc.StatusCode.UNIMPLEMENTED == status_code:
+            status_code = "Method is not implemented or is not supported/enabled in this service."
+        else:
+            status_code = "SOLAT FNS service is unreachable"
+        return status_code
 
 #def fnc_grpc():	
 if __name__ == "__main__":

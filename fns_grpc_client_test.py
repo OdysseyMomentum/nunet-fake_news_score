@@ -57,8 +57,24 @@ def get_fakenews_score(channel):
     Trump heads to New Hampshire and Michigan, while his wife, Lara Trump, a
     member of the reelection campaign, goes to Nevada and Arizona; Donald Trump
     Jr. will be at events in North Carolina and Pennsylvania.'''
-    res = stub.fn_score_calc(example)
-    print(res)
+
+    try:
+        res = stub.fn_score_calc(example)
+        print(res)
+    except grpc.RpcError as e:
+        status_code = e.code()
+        if grpc.StatusCode.INVALID_ARGUMENT == status_code:
+            print("Invalid arguments for FakeNews score service call")
+        elif grpc.StatusCode.PERMISSION_DENIED == status_code:
+            print("Permission denied to FakeNews score service call")
+        elif grpc.StatusCode.RESOURCE_EXHAUSTED == status_code:
+            print("Call to FakeNews score service denied because of resource exhaustion")
+        elif grpc.StatusCode.CANCELLED == status_code:
+            print("Call to FakeNews score cancelled by the user")
+        elif grpc.StatusCode.UNIMPLEMENTED == status_code:
+            print("Method is not implemented or is not supported/enabled in this service.")
+        else:
+            print("FakeNews score service server is unreachable")
 
 with grpc.insecure_channel('localhost:13220') as channel:
     get_fakenews_score(channel)
