@@ -90,5 +90,5 @@ RUN python3.5 -m grpc_tools.protoc \
               --grpc_python_out=. \
               ./service_spec/uclnlpfnc.proto
 
-COPY . odyssey-hackathon-2020-dev/
-WORKDIR odyssey-hackathon-2020-dev/
+COPY . /root/odyssey-hackathon-2020-dev/
+WORKDIR /root/odyssey-hackathon-2020-dev/
