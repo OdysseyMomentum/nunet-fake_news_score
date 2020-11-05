@@ -1,10 +1,13 @@
 FROM ubuntu:18.04
 
+RUN sed -i -e 's/http:\/\/archive.ubuntu.com/http:\/\/be.archive.ubuntu.com/' /etc/apt/sources.list
+
 RUN apt update; apt upgrade -y
 
 RUN apt install -y vim \
                    git \
-		               wget \
+                   wget \
+                   curl \ 
                    cmake \
                    libtool \
                    pkg-config \
