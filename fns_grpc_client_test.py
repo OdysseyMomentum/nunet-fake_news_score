@@ -5,6 +5,8 @@ sys.path.append("./service_spec")
 import fake_news_score_pb2 as pb2
 import fake_news_score_pb2_grpc as pb2_grpc
 
+GRPC_SERVER = 'localhost:13220'
+
 def get_fakenews_score(channel):
     stub = pb2_grpc.FakeNewsScoreStub(channel)
     example = pb2.InputFNS()
@@ -76,7 +78,7 @@ def get_fakenews_score(channel):
         else:
             print("FakeNews score service server is unreachable")
 
-with grpc.insecure_channel('localhost:13220') as channel:
+with grpc.insecure_channel(GRPC_SERVER) as channel:
     get_fakenews_score(channel)
 
 
