@@ -13,8 +13,8 @@ Point to running FNC_GRPC_PORT and UCL_GRPC_PORT instances in fake_news_score.py
 
 Start grpc service
 
-		python3.5 fake_news_score.py
+		python3 fake_news_score.py
 
 Test grpc client
 
-		python3.5 fns_grpc_client_test.py
+		python3 fns_grpc_client_test.py
