@@ -1,0 +1,7 @@
+build_docker_image:
+  script:
+    - docker build -t fake_news_score_module .
+    - docker tag fake_news_score_module:latest registry.gitlab.com/nunet/fake-news-detection/fake_news_score/fake_news_score_module:latest
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.gitlab.com
+    - docker push registry.gitlab.com/nunet/fake-news-detection/fake_news_score/fake_news_score_module:latest
+
