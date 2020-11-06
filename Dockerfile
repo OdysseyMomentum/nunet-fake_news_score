@@ -21,27 +21,13 @@ RUN apt install -y vim \
                    libusb-1.0.0-dev \
                    software-properties-common
 
-RUN cd /root && \
-    git clone -b $(curl -L https://grpc.io/release) https://github.com/grpc/grpc && \
-    cd grpc && \
-    git submodule update --init && \
-    mkdir -p cmake/build && \
-    cd cmake/build && \
-    cmake ../.. && \
-    make -j$(nproc) && \
-    make install && \
-    ldconfig
-
-RUN cd /tmp/grpc && \
-    cd thrid_party/protobuf && \
-    make install & \
-    ldconfig
-
-RUN add-apt-repository -y ppa:deadsnakes/ppa
-
-RUN apt update
-
-RUN apt install -y python3.5 libpython3.5-dev
+ENV TALOS_GRPC_ADD="localhost:9090"
+ENV UCL_GRPC_ADD="localhost:13221"
 
 COPY . fake_news_score/
 WORKDIR fake_news_score/
+
+RUN python3 -m pip install -r requirements.txt
+
+# build proto
+RUN ./install.sh
