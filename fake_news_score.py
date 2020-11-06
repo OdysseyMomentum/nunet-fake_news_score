@@ -2,6 +2,7 @@ import sys
 import grpc
 import operator
 import time
+import os
 from concurrent import futures
 
 sys.path.append("./service_spec")
@@ -12,8 +13,8 @@ import uclnlpfnc_pb2_grpc
 import fnc_stance_detection_pb2
 import fnc_stance_detection_pb2_grpc
 
-FNC_GRPC_PORT = 'localhost:9090' # port fnc service runs
-UCL_GRPC_PORT =	'localhost:13221' # port unlnlp service runs
+TALOS_GRPC_ADD = os.environ['TALOS_GRPC_ADD'] # port talos service runs
+UCL_GRPC_ADD = os.environ['UCL_GRPC_ADD'] # port unlnlp service runs
 
 class GRPCfns(pb2_grpc.FakeNewsScoreServicer):
                      
@@ -35,7 +36,7 @@ class GRPCfns(pb2_grpc.FakeNewsScoreServicer):
         return fn_score
 
 def get_uclnlp(headline, body):
-    channel_ucl = grpc.insecure_channel(UCL_GRPC_PORT)	
+    channel_ucl = grpc.insecure_channel(UCL_GRPC_ADD)	
     stub_ucl = uclnlpfnc_pb2_grpc.UCLNLPStanceClassificationStub(channel_ucl)
     in_d = uclnlpfnc_pb2.InputData()
     in_d.headline = headline
@@ -60,7 +61,7 @@ def get_uclnlp(headline, body):
         return status_code
 
 def get_fnc(headline, body):
-    channel_fnc = grpc.insecure_channel(FNC_GRPC_PORT)	
+    channel_fnc = grpc.insecure_channel(TALOS_GRPC_ADD)	
     stub_fnc = fnc_stance_detection_pb2_grpc.FNCStanceDetectionStub(channel_fnc)
     example = fnc_stance_detection_pb2.Input()
     example.headline = headline
