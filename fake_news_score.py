@@ -13,8 +13,8 @@ import uclnlpfnc_pb2_grpc
 import fnc_stance_detection_pb2
 import fnc_stance_detection_pb2_grpc
 
-TALOS_GRPC_ADD = os.environ['TALOS_GRPC_ADD'] # port talos service runs
-UCL_GRPC_ADD = os.environ['UCL_GRPC_ADD'] # port unlnlp service runs
+FNC_GRPC_PORT =f"localhost{os.getenv('NOMAD_PORT_FNC_GRPC_PORT')}" # port localhost where fnc service runs allocated by nomad
+UCL_GRPC_PORT =f"localhost{os.getenv('NOMAD_PORT_UCL_GRPC_PORT')}" # port on localhost where unlnlp service runs allocated by nomad
 
 class GRPCfns(pb2_grpc.FakeNewsScoreServicer):
                      

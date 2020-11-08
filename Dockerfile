@@ -5,6 +5,7 @@ RUN sed -i -e 's/http:\/\/archive.ubuntu.com/http:\/\/be.archive.ubuntu.com/' /e
 RUN apt update; apt upgrade -y
 
 RUN apt install -y vim \
+                   curl \
                    git \
                    wget \
                    curl \ 
@@ -21,13 +22,11 @@ RUN apt install -y vim \
                    libusb-1.0.0-dev \
                    software-properties-common
 
-ENV TALOS_GRPC_ADD="localhost:9090"
-ENV UCL_GRPC_ADD="localhost:13221"
-
 COPY . fake_news_score/
 WORKDIR fake_news_score/
 
 RUN python3 -m pip install -r requirements.txt
-
 # build proto
 RUN ./install.sh
+
+ENTRYPOINT ["python3", "/fake/news_score/fake_news_score.py"]
