@@ -29,4 +29,4 @@ RUN python3 -m pip install -r requirements.txt
 # build proto
 RUN ./install.sh
 
-ENTRYPOINT ["python3", "/fake/news_score/fake_news_score.py"]
+ENTRYPOINT ["python3", "/fake_news_score/fake_news_score.py"]
