@@ -1,11 +1,11 @@
 
 # Fake News Score Service
 
-A service that wraps average score from [UCL Machine Reading](https://github.com/dagims/fakenewschallenge/tree/snet-service) and [Team SOLAT](https://gitlab.com/nunet/odyssey-hackathon-2020-dev/-/tree/eskender_cpu) fake news stance detection services 
+A service that wraps average score from [UCL Machine Reading](https://gitlab.com/nunet/fake-news-detection/uclnlp) and [Athene](https://gitlab.com/nunet/fake-news-detection/athene) fake news stance detection services 
 
 ## Requirements
 
-Point to running FNC_GRPC_PORT and UCL_GRPC_PORT instances in fake_news_score.py
+Point to running ATHENE_GRPC_PORT and UCL_GRPC_PORT instances in the environmental variables
 
 ## Install
 
