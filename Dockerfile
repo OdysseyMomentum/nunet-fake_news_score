@@ -21,7 +21,7 @@ RUN apt install -y vim \
                    libusb-1.0.0-dev \
                    software-properties-common
 
-ENV TALOS_GRPC_ADD="localhost:9090"
+ENV ATHENE_GRPC_ADD="demo.nunet.io:13322"
 ENV UCL_GRPC_ADD="localhost:13221"
 
 COPY . fake_news_score/

@@ -1,4 +1,4 @@
-python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. service_spec/fnc_stance_detection.proto
+python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. service_spec/athenefnc.proto
 
 python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. service_spec/uclnlpfnc.proto
 

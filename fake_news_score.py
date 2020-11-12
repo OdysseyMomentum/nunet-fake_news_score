@@ -8,12 +8,13 @@ from concurrent import futures
 sys.path.append("./service_spec")
 import fake_news_score_pb2 as pb2
 import fake_news_score_pb2_grpc as pb2_grpc
+
+import athenefnc_pb2 
+import athenefnc_pb2_grpc
 import uclnlpfnc_pb2
 import uclnlpfnc_pb2_grpc
-import fnc_stance_detection_pb2
-import fnc_stance_detection_pb2_grpc
 
-TALOS_GRPC_ADD = os.environ['TALOS_GRPC_ADD'] # port talos service runs
+ATHENE_GRPC_ADD = os.environ['ATHENE_GRPC_ADD'] # port ATHENE service runs
 UCL_GRPC_ADD = os.environ['UCL_GRPC_ADD'] # port unlnlp service runs
 
 class GRPCfns(pb2_grpc.FakeNewsScoreServicer):
@@ -21,13 +22,13 @@ class GRPCfns(pb2_grpc.FakeNewsScoreServicer):
     def fn_score_calc(self, req, ctxt):
         headline = req.headline
         body = req.body
-        fnc_res = get_fnc(headline, body)
         ucl_res = get_uclnlp(headline, body)
+        athene_res = get_athene(headline, body)
         fn_score = pb2.Score()
-        fn_score.agree = (fnc_res.pred_agree * 0.5) + (ucl_res.agree * 0.5)
-        fn_score.disagree = (fnc_res.pred_disagree * 0.5) + (ucl_res.disagree * 0.5)
-        fn_score.discuss = (fnc_res.pred_discuss * 0.5) + (ucl_res.discuss * 0.5)
-        fn_score.unrelated = (fnc_res.pred_unrelated * 0.5) + (ucl_res.unrelated * 0.5)		
+        fn_score.agree = (athene_res.agree * 0.5) + (ucl_res.agree * 0.5)
+        fn_score.disagree = (athene_res.disagree * 0.5) + (ucl_res.disagree * 0.5)
+        fn_score.discuss = (athene_res.discuss * 0.5) + (ucl_res.discuss * 0.5)
+        fn_score.unrelated = (athene_res.unrelated * 0.5) + (ucl_res.unrelated * 0.5)		
         fn = {"agree": fn_score.agree, 
                 "disagree": fn_score.disagree,
                 "discuss" : fn_score.discuss,
@@ -60,29 +61,30 @@ def get_uclnlp(headline, body):
             status_code = "UCLMR FNS service server is unreachable"
         return status_code
 
-def get_fnc(headline, body):
-    channel_fnc = grpc.insecure_channel(TALOS_GRPC_ADD)	
-    stub_fnc = fnc_stance_detection_pb2_grpc.FNCStanceDetectionStub(channel_fnc)
-    example = fnc_stance_detection_pb2.Input()
-    example.headline = headline
-    example.body = body
+def get_athene(headline, body):
+    channel_athene = grpc.insecure_channel(ATHENE_GRPC_ADD)
+    stub_athene = athenefnc_pb2_grpc.AtheneStanceClassificationStub(channel_athene)
+    athene = athenefnc_pb2.InputData()
+    athene.headline = headline
+    athene.body = body
     try:
-        res = stub_fnc.stance_detection(example)
+        res = stub_athene.stance_classify(athene)
         return res
     except grpc.RpcError as e:
         status_code = e.code()
         if grpc.StatusCode.INVALID_ARGUMENT == status_code:
-            status_code = "Invalid arguments for SOLAT FNS service call"
+            status_code = "Invalid arguments for Athene FNS service call"
         elif grpc.StatusCode.PERMISSION_DENIED == status_code:
-            status_code = "Permission denied to SOLAT FNS service call"
+            status_code = "Permission denied to Athene FNS service call"
         elif grpc.StatusCode.RESOURCE_EXHAUSTED == status_code:
-            status_code = "Call to SOLAT FNS service denied because of resource exhaustion"
+            status_code = "Call to Athene FNS service denied because of resource exhaustion"
         elif grpc.StatusCode.CANCELLED == status_code:
-            status_code = "Call to SOLAT FNS cancelled by the user"
+            status_code = "Call to Athene FNS cancelled by the user"
         elif grpc.StatusCode.UNIMPLEMENTED == status_code:
             status_code = "Method is not implemented or is not supported/enabled in this service."
         else:
-            status_code = "SOLAT FNS service is unreachable"
+            status_code = "Athene FNS service is unreachable"
+        print(status_code)
         return status_code
 
 #def fnc_grpc():	
