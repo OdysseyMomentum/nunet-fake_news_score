@@ -1,33 +1,36 @@
-FROM ubuntu:18.04
+FROM snet_publish_service
+  
+RUN apt-get update && \
+        apt-get install -y \
+        curl \
+        vim \
+        nano \
+        git \
+        wget
 
-RUN sed -i -e 's/http:\/\/archive.ubuntu.com/http:\/\/be.archive.ubuntu.com/' /etc/apt/sources.list
+RUN apt-get install -y python3 python3-pip
 
-RUN apt update; apt upgrade -y
+ENV SINGNET_REPOS=/opt/singnet
+ENV ORGANIZATION_ID="odyssey-org"
+ENV ORGANIZATION_NAME="odyssey"
+ENV SERVICE_ID="fakenews-service"
+ENV SERVICE_NAME="FAKE NEWS Service"
+ENV SERVICE_IP="195.201.197.25"
+ENV SERVICE_PORT="7009"
+ENV DAEMON_PORT="7002"
+ENV DAEMON_HOST="0.0.0.0"
+ENV USER_ID="Amante"
+ENV UCL_GRPC_ADD="demo.nunet.io:7007"
+ENV ATHENE_GRPC_ADD="demo.nunet.io:7008"
 
-RUN apt install -y vim \
-                   git \
-                   wget \
-                   curl \ 
-                   cmake \
-                   libtool \
-                   pkg-config \
-                   libc++-dev \
-                   python3-dev \
-                   python3-pip \
-                   libgflags-dev \
-                   libudev-dev \
-                   libgtest-dev \
-                   build-essential \
-                   libusb-1.0.0-dev \
-                   software-properties-common
+EXPOSE 7002:7002
+EXPOSE 7009:7009
 
-ENV ATHENE_GRPC_ADD="demo.nunet.io:13322"
-ENV UCL_GRPC_ADD="localhost:13221"
+COPY . /${SINGNET_REPOS}/fns
+WORKDIR /${SINGNET_REPOS}/fns
 
-COPY . fake_news_score/
-WORKDIR fake_news_score/
+RUN pip3 install -r requirements.txt
 
-RUN python3 -m pip install -r requirements.txt
+RUN sh buildproto.sh
 
-# build proto
-RUN ./install.sh
+CMD ["python3", "run_fake_news_score.py", "--daemon-config", "snetd.config.json"]

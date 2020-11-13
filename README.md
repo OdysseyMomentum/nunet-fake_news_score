@@ -1,20 +1,16 @@
+# FakeNews Score Snet service 
 
-# Fake News Score Service
+Snet Marketplace service for FakeNews stance detection scoring [Athene FNC-1 Submission](https://github.com/hanselowski/athene_system) and [UCLNLP FNC-1 Submission](https://mr.cs.ucl.ac.uk/)
 
-A service that wraps average score from [UCL Machine Reading](https://gitlab.com/nunet/fake-news-detection/uclnlp) and [Athene](https://gitlab.com/nunet/fake-news-detection/athene) fake news stance detection services 
+## Setup
 
-## Requirements
 
-Point to running ATHENE_GRPC_PORT and UCL_GRPC_PORT instances in the environmental variables
+	docker build -t fns_snet .
+	
+	# map snet and etcd directory to container
+	docker run -v $HOME/.snet/:/root/.snet/ -v $HOME/.snet/etcd/athene-service/:/opt/singnet/etcd/ -it fns_snet bash
 
-## Install
-
-		sudo docker build -t IMAGE_NAME .
-
-Start grpc service
-
-		python3 fake_news_score.py
-
-Test grpc client
-
-		python3 fns_grpc_client_test.py
+	# snet request to service (using snet or the test script)
+	snet client call odyssey-org fakenews-service default_group fn_score_calc '{"headline":"news_headline","body":"news_body"}' 
+	
+	python3 test_fake_news_score.py

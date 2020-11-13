@@ -1,0 +1,10 @@
+version: "3.3"
+services:
+  fakenews:
+    build: .
+    ports: 
+      - "7002:7002"
+      - "7009:7009"
+    volumes:
+      - $HOME/.snet/:/root/.snet/ 
+      - $HOME/.snet/etcd/fakenews-service/:/opt/singnet/etcd/
