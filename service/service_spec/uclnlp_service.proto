@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package uclnlpfnc;
+package uclnlp_service;
 
 message InputData {
     string headline = 1;
@@ -17,3 +17,4 @@ message Stance {
 service UCLNLPStanceClassification {
     rpc stance_classify(InputData) returns (Stance) {}
 }
+

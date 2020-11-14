@@ -12,8 +12,8 @@ import fake_news_score_pb2_grpc as pb2_grpc
 
 import athenefnc_pb2 
 import athenefnc_pb2_grpc
-import uclnlpfnc_pb2
-import uclnlpfnc_pb2_grpc
+import uclnlp_service_pb2
+import uclnlp_service_pb2_grpc
 
 ATHENE_GRPC_ADD = os.environ['ATHENE_GRPC_ADD'] # port ATHENE service runs
 UCL_GRPC_ADD = os.environ['UCL_GRPC_ADD'] # port unlnlp service runs
@@ -39,8 +39,8 @@ class GRPCfns(pb2_grpc.FakeNewsScoreServicer):
 
 def get_uclnlp(headline, body):
     channel_ucl = grpc.insecure_channel(UCL_GRPC_ADD)	
-    stub_ucl = uclnlpfnc_pb2_grpc.UCLNLPStanceClassificationStub(channel_ucl)
-    in_d = uclnlpfnc_pb2.InputData()
+    stub_ucl = uclnlp_service_pb2_grpc.UCLNLPStanceClassificationStub(channel_ucl)
+    in_d = uclnlp_service_pb2.InputData()
     in_d.headline = headline
     in_d.body = body	
     try:
@@ -60,6 +60,7 @@ def get_uclnlp(headline, body):
             status_code = "Method is not implemented or is not supported/enabled in this service."
         else:
             status_code = "UCLMR FNS service server is unreachable"
+        print(status_code)
         return status_code
 
 def get_athene(headline, body):
