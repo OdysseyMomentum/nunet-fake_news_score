@@ -1,11 +1,12 @@
 import sys
 import grpc
+import os
 
 sys.path.append("./service/service_spec")
 import fake_news_score_pb2 as pb2
 import fake_news_score_pb2_grpc as pb2_grpc
 
-GRPC_SERVER = 'demo.nunet.io:7009'
+GRPC_SERVER = 'localhost:' + os.environ['SERVICE_PORT']
 
 def get_fakenews_score(channel):
     stub = pb2_grpc.FakeNewsScoreStub(channel)
