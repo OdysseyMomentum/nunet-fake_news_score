@@ -26,6 +26,11 @@ ENV ATHENE_GRPC_ADD="demo.nunet.io:7008"
 EXPOSE 7002:7002
 EXPOSE 7009:7009
 
+RUN wget https://github.com/fullstorydev/grpcurl/releases/download/v1.1.0/grpcurl_1.1.0_linux_x86_64.tar.gz
+RUN tar -xvzf grpcurl_1.1.0_linux_x86_64.tar.gz
+RUN chmod +x grpcurl
+RUN mv grpcurl /usr/local/bin/grpcurl
+
 COPY . /${SINGNET_REPOS}/fns
 WORKDIR /${SINGNET_REPOS}/fns
 
