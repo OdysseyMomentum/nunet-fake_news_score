@@ -14,6 +14,8 @@ import athenefnc_pb2
 import athenefnc_pb2_grpc
 import uclnlp_service_pb2
 import uclnlp_service_pb2_grpc
+from resutils import *
+
 
 ATHENE_GRPC_ADD = os.environ['ATHENE_GRPC_ADD'] # port ATHENE service runs
 UCL_GRPC_ADD = os.environ['UCL_GRPC_ADD'] # port unlnlp service runs
@@ -21,6 +23,12 @@ UCL_GRPC_ADD = os.environ['UCL_GRPC_ADD'] # port unlnlp service runs
 class GRPCfns(pb2_grpc.FakeNewsScoreServicer):
                      
     def fn_score_calc(self, req, ctxt):
+        try:
+            telemetry=resutils()
+            start_time=time.time()
+            cpu_start_time=telemetry.cpu_ticks()
+        except:
+            pass       
         headline = req.headline
         body = req.body
         ucl_res = get_uclnlp(headline, body)
@@ -35,14 +43,22 @@ class GRPCfns(pb2_grpc.FakeNewsScoreServicer):
                 "discuss" : fn_score.discuss,
                 "unrelated" : fn_score.unrelated}
         fn_score.stance = max(fn.items(), key=operator.itemgetter(1))[0]
+        try:
+            memory_used=telemetry.memory_usage()
+            time_taken=time.time()-start_time
+            cpu_used=telemetry.cpu_ticks()-cpu_start_time
+            net_used=telemetry.block_in()
+            telemetry.call_telemetry(str(cpu_used),str(memory_used),str(net_used),str(time_taken))
+        except:
+            pass	
         return fn_score
 
-def get_uclnlp(headline, body):
+def get_uclnlp(headline, body): 
     channel_ucl = grpc.insecure_channel(UCL_GRPC_ADD)	
     stub_ucl = uclnlp_service_pb2_grpc.UCLNLPStanceClassificationStub(channel_ucl)
     in_d = uclnlp_service_pb2.InputData()
     in_d.headline = headline
-    in_d.body = body	
+    in_d.body = body
     try:
         res = stub_ucl.stance_classify(in_d)
         return res
