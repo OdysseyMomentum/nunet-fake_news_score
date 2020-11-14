@@ -1,9 +1,10 @@
 import sys
 import grpc
-
 sys.path.append("./service/service_spec")
 import fake_news_score_pb2 as pb2
 import fake_news_score_pb2_grpc as pb2_grpc
+from resutils import *
+import time
 
 GRPC_SERVER = 'demo.nunet.io:7009'
 
@@ -61,7 +62,21 @@ def get_fakenews_score(channel):
     Jr. will be at events in North Carolina and Pennsylvania.'''
 
     try:
+        try:
+            telemetry=resutils()
+            start_time=time.time()
+            cpu_start_time=telemetry.cpu_usage()
+        except:
+            pass
         res = stub.fn_score_calc(example)
+        try:
+            memory_used=telemetry.memory_usage()
+            time_taken=start_time-time.time()
+            cpu_used=cpu_start_time-telemetry.cpu_ticks()
+            net_used=telemetry.block_in()
+            telemetry.call_telemetry(cpu_used,memory_used,net_used,time_taken)
+        except:
+            pass
         print(res)
     except grpc.RpcError as e:
         status_code = e.code()
