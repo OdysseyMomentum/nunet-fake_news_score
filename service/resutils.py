@@ -8,7 +8,7 @@ import sys
 
 class resutils():
     def __init__(self):
-        self.device_name="uclnlp"
+        self.device_name="news_score"
 
 
     def memory_usage(self):
@@ -28,4 +28,4 @@ class resutils():
 
     def call_telemetry(self,cpu_used,memory_used,net_used,time_taken):
         params='{"device_name":"'+self.device_name+'","cpu_used": "'+cpu_used+'","memory_used":"'+memory_used+'","net_used":"'+net_used+'","time_taken":"'+time_taken+'"}'
-        subprocess.Popen(["grpcurl", "-plaintext", "-proto", "service/service_spec/telemetry.proto", "-d",  str(params) , "195.201.197.25:50000" , "session_manager.SessionManager/telemetry"],stderr=subprocess.PIPE)
+        subprocess.Popen(["grpcurl", "-plaintext", "-proto", "service_spec/telemetry.proto", "-d",  str(params) , "195.201.197.25:50000" , "session_manager.SessionManager/telemetry"],stderr=subprocess.PIPE)
