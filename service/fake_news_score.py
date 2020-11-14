@@ -17,8 +17,9 @@ import uclnlp_service_pb2_grpc
 from resutils import *
 
 
-ATHENE_GRPC_ADD = os.environ['ATHENE_GRPC_ADD'] # port ATHENE service runs
-UCL_GRPC_ADD = os.environ['UCL_GRPC_ADD'] # port unlnlp service runs
+ATHENE_GRPC_ADD = os.environ['ATHENE_GRPC_ADD'] # address ATHENE service runs
+UCL_GRPC_ADD = os.environ['UCL_GRPC_ADD'] # address unlnlp service runs
+grpc_port = os.environ['SERVICE_PORT'] # port for fakenews
 
 class GRPCfns(pb2_grpc.FakeNewsScoreServicer):
                      
@@ -28,7 +29,7 @@ class GRPCfns(pb2_grpc.FakeNewsScoreServicer):
             start_time=time.time()
             cpu_start_time=telemetry.cpu_ticks()
         except:
-            pass       
+            print("telemetry is failing to start")
         headline = req.headline
         body = req.body
         ucl_res = get_uclnlp(headline, body)
@@ -50,7 +51,7 @@ class GRPCfns(pb2_grpc.FakeNewsScoreServicer):
             net_used=telemetry.block_in()
             telemetry.call_telemetry(str(cpu_used),str(memory_used),str(net_used),str(time_taken))
         except:
-            pass	
+            print("telemetry is failing to start")
         return fn_score
 
 def get_uclnlp(headline, body): 
@@ -107,7 +108,6 @@ def get_athene(headline, body):
 
 #def fnc_grpc():	
 if __name__ == "__main__":
-    grpc_port = 7009
     grpc_server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     pb2_grpc.add_FakeNewsScoreServicer_to_server(GRPCfns(), grpc_server)
     grpc_server.add_insecure_port('[::]:' + str(grpc_port))

@@ -7,8 +7,8 @@ Snet Marketplace service for FakeNews stance detection scoring [Athene FNC-1 Sub
 
 	docker build -t fns_snet .
 	
-	# map snet and etcd directory to container
-	docker run -v $HOME/.snet/:/root/.snet/ -v $HOME/.snet/etcd/athene-service/:/opt/singnet/etcd/ -it fns_snet bash
+	# map daemon and service ports
+	docker run -p 7002:7002 -p 7009:7009 -it fns_snet bash
 
 	# snet request to service (using snet or the test script)
 	snet client call odyssey-org fakenews-service default_group fn_score_calc '{"headline":"news_headline","body":"news_body"}' 
