@@ -8,7 +8,7 @@ import sys
 
 class resutils():
     def __init__(self):
-        self.device_name="news_score"
+        self.device_name="uclnlp"
 
 
     def memory_usage(self):
@@ -18,11 +18,13 @@ class resutils():
 
     def cpu_ticks(self):
         sec= time.clock()
-        tick=sec*20
-        return tick
+        tick=sec*(10**7)
+        mtick=tick/10**6
+        return mtick
 
     def block_in(self):
-        return getrusage(RUSAGE_SELF).ru_inblock
+        to_KB = 1024.
+        return getrusage(RUSAGE_SELF).ru_inblock/to_KB
 
     def call_telemetry(self,cpu_used,memory_used,net_used,time_taken):
         params='{"device_name":"'+self.device_name+'","cpu_used": "'+cpu_used+'","memory_used":"'+memory_used+'","net_used":"'+net_used+'","time_taken":"'+time_taken+'"}'
